@@ -15,10 +15,9 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           //title: const Text('Joy Volanath'),
-          title: const Text('InnoSpace Employee'),
+          title: const Text('InnoSpace Employee', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),),
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
