@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   sqflite: ^2.3.0
   connectivity_plus: ^5.0.2
+  #splash_screen_view: ^3.0.0
+
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +50,22 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_native_splash: ^2.3.9
+
+flutter_native_splash:
+  image: assets/splash.png
+  color: "#ffffff"
+  android: true
+  ios: true
+  android_gravity: center
+  android_12:
+    image: assets/splash.png
+    icon_background_color: "#ffffff"
+    image_dark: assets/splash.png
+    icon_background_color_dark: "#121212"
+    android_gravity: center
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -59,6 +77,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

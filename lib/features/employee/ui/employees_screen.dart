@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_sync/data/model/employee_model.dart';
 import 'package:sqflite_sync/features/employee/ui/employee_screen.dart';
 import 'package:sqflite_sync/features/employee/ui/widgets/employee_widget.dart';
 import 'package:sqflite_sync/services/db_helper.dart';
+import 'package:flutter/services.dart';
 
 class EmployeesScreen extends StatefulWidget {
   const EmployeesScreen({Key? key}) : super(key: key);
@@ -12,6 +16,74 @@ class EmployeesScreen extends StatefulWidget {
 }
 
 class _EmployeesScreenState extends State<EmployeesScreen> {
+
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      //developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+
+    //if((_connectionStatus.toString().contains("none"))) {
+    if(result == ConnectivityResult.none) {
+      return showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (_) => AlertDialog(
+            content: Text("Please check your internet"),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Go to Settings'),
+                onPressed: () {
+                  //SystemSettings.system();
+                },
+              ),
+              TextButton(
+                child: Text('Close me!'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          )
+      );
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
