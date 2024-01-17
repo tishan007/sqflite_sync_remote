@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_sync/data/model/employee_model.dart';
+import 'package:sqflite_sync/data/model/user_model.dart';
+import 'package:sqflite_sync/data/provider/user_provider.dart';
+import 'package:sqflite_sync/data/repository/user_repository.dart';
 import 'package:sqflite_sync/features/employee/ui/employee_screen.dart';
 import 'package:sqflite_sync/features/employee/ui/widgets/employee_widget.dart';
 import 'package:sqflite_sync/services/db_helper.dart';
@@ -80,6 +83,30 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
             ],
           )
       );
+    }
+
+    if(result != ConnectivityResult.none) {
+      UserModel userModel = await UserRepository(UserProvider()).getUserList();
+      print("first name : ${userModel.data.first.firstName}");
+      print("length : ${userModel.data.length}");
+
+      //final EmployeeModel model = EmployeeModel(name: name, designation: designation, id: employee?.id);
+      /*final EmployeeModel model = EmployeeModel(name: userModel.data.first.firstName, designation: userModel.data.first.email,);
+
+      await DatabaseHelper.addEmployee(model);*/
+
+      /*for (var row in userModel.data) {
+        final EmployeeModel model = EmployeeModel(name: row.firstName, designation: row.email,);
+        await DatabaseHelper.addEmployee(model);
+        print("last name : ${row.lastName}");
+      }*/
+      userModel.data.forEach((row) async {
+          final EmployeeModel model = EmployeeModel(name: row.firstName, designation: row.email,);
+          await DatabaseHelper.addEmployee(model);
+          print("last name : ${row.lastName}");
+        }
+      );
+
     }
 
   }
