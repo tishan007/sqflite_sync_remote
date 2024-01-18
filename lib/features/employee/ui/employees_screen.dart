@@ -94,17 +94,17 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       print("first name : ${userModel.data.first.firstName}");
       print("length : ${userModel.data.length}");*/
 
+      /// data show after some delay for that
       PrimeDbModel primeDbModel = await UserRepository(UserProvider()).getPrimeDb();
       print("Prime User name : ${primeDbModel.secUsers.first.userFullName}");
+      print("Prime User length : ${primeDbModel.secUsers.length}");
 
       Future.delayed(Duration(seconds: 5), () {
         setState(() {
-          print("Prime User name : ${primeDbModel.secUsers.first.userFullName}");
+          print("Prime User delay name : ${primeDbModel.secUsers.first.userFullName}");
         });
       });
-
-      print("Prime User name : ${primeDbModel.secUsers.first.userFullName}");
-      print("Prime User length : ${primeDbModel.secUsers.length}");
+      ///
 
       DatabaseHelper.deleteAllEmployee();
 
