@@ -90,6 +90,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       print("first name : ${userModel.data.first.firstName}");
       print("length : ${userModel.data.length}");
 
+      DatabaseHelper.deleteAllEmployee();
+
       //final EmployeeModel model = EmployeeModel(name: name, designation: designation, id: employee?.id);
       /*final EmployeeModel model = EmployeeModel(name: userModel.data.first.firstName, designation: userModel.data.first.email,);
 
@@ -100,6 +102,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         await DatabaseHelper.addEmployee(model);
         print("last name : ${row.lastName}");
       }*/
+
       userModel.data.forEach((row) async {
           final EmployeeModel model = EmployeeModel(name: row.firstName, designation: row.email,);
           await DatabaseHelper.addEmployee(model);
@@ -131,12 +134,13 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           future: DatabaseHelper.getAllEmployees(),
           builder: (context, AsyncSnapshot<List<EmployeeModel>?> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
             } else if (snapshot.hasData) {
               if (snapshot.data != null) {
                 return ListView.builder(
+                  itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) => EmployeeWidget(
                     employee: snapshot.data![index],
                     onTap: () async {
@@ -178,14 +182,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                           });
                     },
                   ),
-                  itemCount: snapshot.data!.length,
                 );
               }
-              return const Center(
-                child: Text('No Employee yet'),
-              );
             }
-            return const SizedBox.shrink();
+            return const Center(
+              child: Text('No Employee yet'),
+            );
           },
         )
     );

@@ -47,6 +47,13 @@ class DatabaseHelper {
     );
   }
 
+  static Future<int> deleteAllEmployee() async {
+    final db = await _getDB();
+    return await db.delete(
+      "employee",
+    );
+  }
+
   static Future<List<EmployeeModel>?> getAllEmployees() async {
     final db = await _getDB();
 
