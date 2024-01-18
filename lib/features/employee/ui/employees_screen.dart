@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_sync/data/model/employee_model.dart';
+import 'package:sqflite_sync/data/model/prime_db_model.dart';
 import 'package:sqflite_sync/data/model/user_model.dart';
 import 'package:sqflite_sync/data/provider/user_provider.dart';
 import 'package:sqflite_sync/data/repository/user_repository.dart';
@@ -86,14 +87,30 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     }
 
     if(result != ConnectivityResult.none) {
-      UserModel userModel = await UserRepository(UserProvider()).getUserList();
-      print("first name : ${userModel.data.first.firstName}");
-      print("length : ${userModel.data.length}");
 
       DatabaseHelper.deleteAllEmployee();
 
-      //final EmployeeModel model = EmployeeModel(name: name, designation: designation, id: employee?.id);
-      /*final EmployeeModel model = EmployeeModel(name: userModel.data.first.firstName, designation: userModel.data.first.email,);
+      /*UserModel userModel = await UserRepository(UserProvider()).getUserList();
+      print("first name : ${userModel.data.first.firstName}");
+      print("length : ${userModel.data.length}");*/
+
+      PrimeDbModel primeDbModel = await UserRepository(UserProvider()).getPrimeDb();
+      print("Prime User name : ${primeDbModel.secUsers.first.userFullName}");
+
+      Future.delayed(Duration(seconds: 5), () {
+        setState(() {
+          print("Prime User name : ${primeDbModel.secUsers.first.userFullName}");
+        });
+      });
+
+      print("Prime User name : ${primeDbModel.secUsers.first.userFullName}");
+      print("Prime User length : ${primeDbModel.secUsers.length}");
+
+      DatabaseHelper.deleteAllEmployee();
+
+      // single data entry
+      /*final EmployeeModel model = EmployeeModel(name: name, designation: designation, id: employee?.id);
+      final EmployeeModel model = EmployeeModel(name: userModel.data.first.firstName, designation: userModel.data.first.email,);
 
       await DatabaseHelper.addEmployee(model);*/
 
@@ -103,11 +120,18 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         print("last name : ${row.lastName}");
       }*/
 
-      userModel.data.forEach((row) async {
+      /*userModel.data.forEach((row) async {
           final EmployeeModel model = EmployeeModel(name: row.firstName, designation: row.email,);
           await DatabaseHelper.addEmployee(model);
           print("last name : ${row.lastName}");
         }
+      );*/
+
+      primeDbModel.secUsers.forEach((row) async {
+        final EmployeeModel model = EmployeeModel(name: row.userFullName, designation: row.userMobile,);
+        await DatabaseHelper.addEmployee(model);
+        print("userNo : ${row.userNo}");
+      }
       );
 
     }
@@ -186,7 +210,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               }
             }
             return const Center(
-              child: Text('No Employee yet'),
+              child: Text('No Data found yet'),
             );
           },
         )

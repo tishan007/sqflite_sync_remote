@@ -1,3 +1,4 @@
+import 'package:sqflite_sync/data/model/prime_db_model.dart';
 import 'package:sqflite_sync/data/model/user_model.dart';
 import 'package:sqflite_sync/data/provider/user_provider.dart';
 
@@ -11,6 +12,10 @@ class UserRepository {
 
   Future<UserModel> getUserList() {
     return userProvider.getUserList();
+  }
+
+  Future<PrimeDbModel> getPrimeDb() {
+    return userProvider.getPrimeDBData();
   }
 
 
